@@ -44,6 +44,9 @@ exe 'hi MatchParen guibg=' .. black .. ' guifg=' .. magenta
 
 exe 'hi Special guifg=' .. blue
 
+exe 'hi Error guifg=' .. red .. ' guibg=' .. black
+exe 'hi ErrorMsg guifg=' .. red .. ' guibg=' .. black
+
 #exe 'hi Search   gui=underline'
 #exe 'hi IncSearch guifg='bg' guibg='keyword
 exe 'hi Directory guifg=' .. white
