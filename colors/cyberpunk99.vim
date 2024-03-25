@@ -1,174 +1,498 @@
-vim9script noclear
+vim9script
 # Theme: cyberpunk99
 # Author: Olex Hryshchenko <greeschenko@gmail.com>
 # License: MIT
 # Origin: https://github.com/greeschenko/cyberpunk99.git
 
-
+set background=dark
 hi clear
 syntax reset
 set t_Co=256
-
 g:colors_name = "cyberpunk99"
 
-var black = "#101419"     #black
-var darkred = "#873233"   #red
-var red = "#ff6e66"       #red
-var darkgreen = "#244c52" #black
-var green = "#1dcfb2"     #green
-var yellow = "#ffda4d"    #yellow
-var blue = "#307bd8"      #blue
-var magenta = "#fa4372"   #magenta
-var cyan = "#6af7ff"      #cyan
-var white = "#dbd4d0"     #white
-var grey = "#505254"      #white
+const palette = {
+    "bg": "#101419",
+    "black": "#101419",
+    "darkred": "#873233",
+    "red": "#ff6e66",
+    "darkgreen": "#244c52",
+    "green": "#1dcfb2",
+    "yellow": "#ffda4d",
+    "blue": "#307bd8",
+    "magenta": "#fa4372",
+    "cyan": "#6af7ff",
+    "white": "#dbd4d0",
+    "grey": "#505254"
+}
 
-exe 'hi NonText guifg=' .. grey .. ' guibg=' .. black
-exe 'hi Normal guibg=' .. black
-exe 'hi LineNr guibg=' .. black .. ' guifg=' .. blue
-exe 'hi Cursor guifg=red guibg=' .. red
-exe 'hi CursorLine cterm=none gui=none guibg=' .. darkred .. ' guifg=' .. red
-exe 'hi CursorLineNr cterm=none gui=none guibg=' .. darkred .. ' guifg=' .. red
-exe 'hi CursorColumn guibg=' .. darkred .. ' guifg=' .. red
-exe 'hi ColorColumn guibg=' .. black
-exe 'hi Pmenu       guibg=' .. black .. ' guifg=' .. white
-exe 'hi PmenuSel    guibg=' .. red .. ' guifg=' .. white
-exe 'hi PmenuSbar   guibg=' .. red
-exe 'hi PmenuThumb  guibg=' .. red
-exe 'hi Comment guifg=' .. grey .. ' guibg=' .. black
-exe 'hi Folded     guifg=' .. magenta .. ' guibg=' .. black
-exe 'hi FoldColumn guifg=' .. magenta .. ' guibg=' .. black
-exe 'hi VertSplit guifg=' .. black .. ' guibg=' .. grey
-exe 'hi Visual  guibg=' .. darkred .. ' guifg=' .. red
-exe 'hi MatchParen guibg=' .. black .. ' guifg=' .. magenta
+const groups = {
+    "Normal": { "guifg": palette.red },
+    "IncSearch": { "guibg": palette.yellow },
+    "Title": { "link": "String" },
+    "NonText": { "guifg": palette.grey },
+    "LineNr": { "guifg": palette.darkred },
+    "Comment": { "guifg": palette.darkgreen},
 
-exe 'hi Special guifg=' .. blue
+    "String": { "guifg": palette.cyan },
+    "Boolean": { "guifg": palette.green },
+    "Number": { "link": "Boolean" },
+    "Float": { "link": "Boolean" },
+    "Keyword": { "link": "Boolean" },
+    "SpecialKey": { "link": "Boolean" },
+    "Operator": { "link": "Boolean" },
+    "Constant": { "link": "Boolean" },
+    "Character": { "link": "Boolean" },
+    "Type": { "guifg": palette.magenta },
+    "StorageClass": { "link": "Type" },
+    "Structure": { "link": "Type" },
+    "Typedef": { "link": "Type" },
+    "Function": { "guifg": palette.blue },
+    "Statement": { "link": "Function" },
+    "Conditional": { "link": "Function" },
+    "Repeat": { "link": "Function" },
+    "Label": { "link": "Function" },
+    "Identifier": { "guifg": palette.yellow },
+    "Exception": { "link": "Identifier" },
+    "PreProc": { "link": "Identifier" },
+    "Include": { "link": "Identifier" },
+    "Define": { "link": "Identifier" },
+    "Macro": { "link": "Identifier" },
+    "PreCondit": { "link": "Identifier" },
 
-exe 'hi Error guifg=' .. red .. ' guibg=' .. black
-exe 'hi ErrorMsg guifg=' .. red .. ' guibg=' .. black
+    "Special": { "guifg": palette.yellow },
+    "Error": { "guifg": palette.white, "guibg": palette.red },
+    "ErrorMsg": { "link": "Error" },
 
-#exe 'hi Search   gui=underline'
-#exe 'hi IncSearch guifg='bg' guibg='keyword
-exe 'hi Directory guifg=' .. white
-exe 'hi Folded guifg=' .. white .. ' guibg=' .. black
-exe 'hi WildMenu guifg=' .. white .. ' guibg=' .. black
+    "Pmenu": { "guifg": palette.cyan, "guibg": palette.black },
+    "PmenuSel": { "guifg": palette.magenta, "guibg": palette.black, "gui": "bold"},
+    "PmenuSbar": { "guibg": palette.darkgreen },
+    "PmenuThumb": { "guibg": palette.magenta },
 
-# Define reusable colorvariables.
-exe 'hi String guifg=' .. yellow
-exe 'hi Boolean guifg=' .. magenta .. ' gui=bold'
-exe 'hi Type guifg=' .. cyan
-exe 'hi Function guifg=' .. red .. ' gui=bold'
-exe 'hi SignColumn guifg=' .. white .. ' guibg=' .. black
-exe 'hi Statement guifg=' .. cyan
-exe 'hi Keyword guifg=' .. red .. ' gui=bold'
-exe 'hi SpecialKey guifg=' .. red .. ' gui=bold'
-exe 'hi Identifier guifg=' .. red .. ' gui=bold guibg=' .. black
+    "CursorLine": { "guibg": palette.darkred,  "gui": "none", "cterm": "none" },
+    "CursorLineNr": { "link": "CursorLine" },
+    "CursorColumn": { "link": "CursorLine" },
+    "ColorColumn": { "link": "CursorLine" },
+    "Visual": { "link": "CursorLine" },
 
-exe 'hi jsxCloseString guifg=' .. blue
+    "Folded": { "guifg": palette.magenta},
+    "FoldColumn": { "link": "Folded" },
+    "VertSplit": { "guifg": palette.bg, "guibg": palette.darkgreen },
+    "MatchParen": { "guifg": palette.white, "guibg": palette.bg },
 
-exe 'hi phpDefine guifg=' .. red
-exe 'hi phpDocTags guifg=' .. blue
+    "WildMenu": { "guibg": palette.yellow },
+    "StatusLine": { "guibg": palette.black, "guifg": palette.magenta },
 
-exe 'hi CocFadeOut guibg=' .. black
-exe 'hi CocErrorSign guifg=' .. red
-exe 'hi CocHighlightText cterm=none gui=none guibg=' .. darkgreen .. ' guifg=' .. cyan
-exe 'hi CocFloating cterm=none gui=none guibg=' .. black .. ' guifg=' .. red
-exe 'hi CocMenuSel cterm=none gui=none guibg=' .. darkgreen .. ' guifg=' .. cyan
+    "SignColumn": { "guibg": palette.bg },
 
-exe 'hi StatusLine cterm=none gui=none guibg=' .. darkgreen .. ' guifg=' .. cyan
-exe 'hi StatusLineNC cterm=none gui=none guibg=' .. darkgreen .. ' guifg=' .. cyan
+    "Cursor": { "guibg": palette.magenta },
+    "vCursor": { "link": "Cursor" },
+    "iCursor": { "link": "Cursor" },
+    "lCursor": { "link": "Cursor" },
 
-#exe ':hi Character guifg='s:const
-#exe ':hi Conditional guifg='s:keyword
-#exe ':hi Constant guifg='s:const
-#exe ':hi Todo guibg='s:bg
-#exe ':hi Define guifg='s:keyword
-#exe ':hi DiffAdd guifg=#fafafa guibg=#123d0f gui=bold'
-#exe ':hi DiffDelete guibg='s:bg2
-#exe ':hi DiffChange  guibg=#151b3c guifg=#fafafa'
-#exe ':hi DiffText guifg=#ffffff guibg=#ff0000 gui=bold'
-#exe ':hi ErrorMsg guifg='s:warning' guibg='s:bg2' gui=bold'
-#exe ':hi WarningMsg guifg='s:fg' guibg='s:warning2
-#exe ':hi Float guifg='s:const
-#exe ':hi Label guifg='s:var
-#exe ':hi NonText guifg='s:bg4' guibg='s:bg2
-#exe ':hi Number guifg='s:const
-#exe ':hi Operator guifg='s:keyword
-#exe ':hi PreProc guifg='s:keyword
-#exe ':hi Special guifg='s:fg
-#exe ':hi StorageClass guifg='s:type'  gui=italic'
-#exe ':hi Tag guifg='s:keyword
-#exe ':hi Title guifg='s:fg'  gui=bold'
-#exe ':hi Todo guifg='s:fg2'  gui=inverse,bold'
-#exe ':hi Underlined   gui=underline'
+    "Todo": { "link": "IncSearch" },
 
-# Neovim Terminal Mode
-#let g:terminal_color_0 = s:bg
-#let g:terminal_color_1 = s:warning
-#let g:terminal_color_2 = s:keyword
-#let g:terminal_color_3 = s:bg4
-#let g:terminal_color_4 = s:func
-#let g:terminal_color_5 = s:builtin
-#let g:terminal_color_6 = s:fg3
-#let g:terminal_color_7 = s:str
-#let g:terminal_color_8 = s:bg2
-#let g:terminal_color_9 = s:warning2
-#let g:terminal_color_10 = s:fg2
-#let g:terminal_color_11 = s:var
-#let g:terminal_color_12 = s:type
-#let g:terminal_color_13 = s:const
-#let g:terminal_color_14 = s:fg4
-#let g:terminal_color_15 = s:comment
+    "EasyMotionTarget": { "link": "Search" },
+    "EasyMotionShade": { "link": "Comment" },
+    "Sneak": { "link": "Search" },
+    "SneakLabel": { "link": "Search" },
 
-# Ruby Highlighting
-#exe ':hi rubyAttribute guifg='s:builtin
-#exe ':hi rubyLocalVariableOrMethod guifg='s:var
-#exe ':hi rubyGlobalVariable guifg='s:var' gui=italic'
-#exe ':hi rubyInstanceVariable guifg='s:var
-#exe ':hi rubyKeyword guifg='s:keyword
-#exe ':hi rubyKeywordAsMethod guifg='s:keyword' gui=bold'
-#exe ':hi rubyClassDeclaration guifg='s:keyword' gui=bold'
-#exe ':hi rubyClass guifg='s:keyword' gui=bold'
-#exe ':hi rubyNumber guifg='s:const
+    "diffAdded": { "link": "Boolean" },
+    "diffRemoved": { "link": "Normal" },
+    "diffChanged": { "link": "Function" },
+    "diffFile": { "link": "Identifier" },
+    "diffNewFile": { "link": "Identifier" },
+    "diffLine": { "link": "Function" },
 
-# Python Highlighting
-#exe ':hi pythonBuiltinFunc guifg='s:builtin
+    "htmlTag": { "link": "Function" },
+    "htmlEndTag": { "link": "Function" },
+    "htmlTagName": { "link": "Function" },
+    "htmlArg": { "link": "Function" },
+    "htmlScriptTag": { "link": "Type" },
+    "htmlTagN": { "link": "String" },
+    "htmlSpecialTagName": { "link": "Function" },
+    "htmlSpecialChar": { "link": "Identifier" },
+    "htmlLink": { "link": "Identifier" },
+    "htmlBold": { "link": "Identifier" },
+    "htmlBoldUnderline": { "link": "Identifier" },
+    "htmlBoldItalic": { "link": "Identifier" },
+    "htmlBoldUnderlineItalic": { "link": "Identifier" },
+    "htmlUnderline": { "link": "Identifier" },
+    "htmlUnderlineItalic": { "link": "Identifier" },
+    "htmlItalic": { "link": "Identifier" },
 
-# Go Highlighting
-#exe ':hi goBuiltins guifg='s:builtin
-#let g:go_highlight_array_whitespace_error = 1
-#let g:go_highlight_build_constraints      = 1
-#let g:go_highlight_chan_whitespace_error  = 1
-#let g:go_highlight_extra_types            = 1
-#let g:go_highlight_fields                 = 1
-#let g:go_highlight_format_strings         = 1
-#let g:go_highlight_function_calls         = 1
-#let g:go_highlight_function_parameters    = 1
-#let g:go_highlight_functions              = 1
-#let g:go_highlight_generate_tags          = 1
-#let g:go_highlight_operators              = 1
-#let g:go_highlight_space_tab_error        = 1
-#let g:go_highlight_string_spellcheck      = 1
-#let g:go_highlight_types                  = 1
-#let g:go_highlight_variable_assignments   = 1
-#let g:go_highlight_variable_declarations  = 1
+    "xmlTag": { "link": "Function" },
+    "xmlEndTag": { "link": "Function" },
+    "xmlTagName": { "link": "Function" },
+    "xmlEqual": { "link": "Function" },
+    "docbkKeyword": { "link": "Function" },
+    "xmlDocTypeDecl": { "link": "NonText" },
+    "xmlDocTypeKeyword": { "link": "Type" },
+    "xmlCdataStart": { "link": "NonText" },
+    "xmlCdataCdata": { "link": "Type" },
+    "dtdFunction": { "link": "NonText" },
+    "dtdTagName": { "link": "Type" },
+    "xmlAttrib": { "link": "Function" },
+    "xmlProcessingDelim": { "link": "NonText" },
+    "dtdParamEntityPunct": { "link": "NonText" },
+    "dtdParamEntityDPunct": { "link": "NonText" },
+    "xmlAttribPunct": { "link": "NonText" },
+    "xmlEntity": { "link": "Identifier" },
+    "xmlEntityPunct": { "link": "Identifier" },
 
-# Javascript Highlighting
-#exe ':hi jsBuiltins guifg='s:builtin
-#exe ':hi jsFunction guifg='s:keyword' gui=bold'
-#exe ':hi jsGlobalObjects guifg='s:type
-#exe ':hi jsAssignmentExps guifg='s:var
+    "vimNotation": { "link": "Identifier" },
+    "vimBracket": { "link": "Identifier" },
+    "vimMapModKey": { "link": "Identifier" },
+    "vimFuncSID": { "link": "Function" },
+    "vimSetSep": { "link": "Function" },
+    "vimSep": { "link": "Function" },
+    "vimContinue": { "link": "Function" },
 
-# Html Highlighting
-#exe ':hi htmlLink guifg='s:var' gui=underline'
-#exe ':hi htmlStatement guifg='s:keyword
-#exe ':hi htmlSpecialTagName guifg='s:keyword
-
-# Markdown Highlighting
-#exe ':hi mkdCode guifg='s:builtin
+    "clojureKeyword": { "link": "Function" },
+    "clojureCond": { "link": "Identifier" },
+    "clojureSpecial": { "link": "Identifier" },
+    "clojureDefine": { "link": "Identifier" },
+    "clojureFunc": { "link": "Identifier" },
+    "clojureRepeat": { "link": "Identifier" },
+    "clojureCharacter": { "link": "Function" },
+    "clojureStringEscape": { "link": "Function" },
+    "clojureException": { "link": "Normal" },
+    "clojureRegexp": { "link": "Function" },
+    "clojureRegexpEscape": { "link": "Function" },
+    "clojureRegexpMod": { "link": "clojureRegexpCharClass" },
+    "clojureRegexpQuantifier": { "link": "clojureRegexpCharClass" },
+    "clojureParen": { "link": "Function" },
+    "clojureAnonArg": { "link": "Identifier" },
+    "clojureVariable": { "link": "Function" },
+    "clojureMacro": { "link": "Identifier" },
+    "clojureMeta": { "link": "Identifier" },
+    "clojureDeref": { "link": "Identifier" },
+    "clojureQuote": { "link": "Identifier" },
+    "clojureUnquote": { "link": "Identifier" },
+    "clojureRegexpCharClass": { "link": "Type" },
 
 
-#$$$$$$$$$$$$$$$$$
+    "cOperator": { "link": "Type" },
+    "cStructure": { "link": "Identifier" },
+
+    "pythonBuiltin": { "link": "Identifier" },
+    "pythonBuiltinObj": { "link": "Identifier" },
+    "pythonBuiltinFunc": { "link": "Identifier" },
+    "pythonFunction": { "link": "Function" },
+    "pythonDecorator": { "link": "Normal" },
+    "pythonInclude": { "link": "Function" },
+    "pythonImport": { "link": "Function" },
+    "pythonRun": { "link": "Function" },
+    "pythonCoding": { "link": "Function" },
+    "pythonOperator": { "link": "Normal" },
+    "pythonException": { "link": "Normal" },
+    "pythonExceptions": { "link": "Type" },
+    "pythonBoolean": { "link": "Type" },
+    "pythonDot": { "link": "Function" },
+    "pythonConditional": { "link": "Normal" },
+    "pythonRepeat": { "link": "Normal" },
+    "pythonDottedName": { "link": "BooleanBold" },
+
+    "cssBraces": { "link": "Function" },
+    "cssFunctionName": { "link": "Identifier" },
+    "cssIdentifier": { "link": "Identifier" },
+    "cssClassName": { "link": "Boolean" },
+    "cssColor": { "link": "Function" },
+    "cssSelectorOp": { "link": "Function" },
+    "cssSelectorOp2": { "link": "Function" },
+    "cssImportant": { "link": "Boolean" },
+    "cssVendor": { "link": "String" },
+    "cssTextProp": { "link": "Function" },
+    "cssAnimationProp": { "link": "Function" },
+    "cssUIProp": { "link": "Identifier" },
+    "cssTransformProp": { "link": "Function" },
+    "cssTransitionProp": { "link": "Function" },
+    "cssPrintProp": { "link": "Function" },
+    "cssPositioningProp": { "link": "Identifier" },
+    "cssBoxProp": { "link": "Function" },
+    "cssFontDescriptorProp": { "link": "Function" },
+    "cssFlexibleBoxProp": { "link": "Function" },
+    "cssBorderOutlineProp": { "link": "Function" },
+    "cssBackgroundProp": { "link": "Function" },
+    "cssMarginProp": { "link": "Function" },
+    "cssListProp": { "link": "Function" },
+    "cssTableProp": { "link": "Function" },
+    "cssFontProp": { "link": "Function" },
+    "cssPaddingProp": { "link": "Function" },
+    "cssDimensionProp": { "link": "Function" },
+    "cssRenderProp": { "link": "Function" },
+    "cssColorProp": { "link": "Function" },
+    "cssGeneratedContentProp": { "link": "Function" },
+
+    "javaScriptBraces": { "link": "String" },
+    "javaScriptFunction": { "link": "Function" },
+    "javaScriptIdentifier": { "link": "Normal" },
+    "javaScriptMember": { "link": "Function" },
+    "javaScriptNumber": { "link": "Type" },
+    "javaScriptNull": { "link": "Type" },
+    "javaScriptParens": { "link": "Function" },
+    "javascriptImport": { "link": "Function" },
+    "javascriptExport": { "link": "Function" },
+    "javascriptClassKeyword": { "link": "Function" },
+    "javascriptClassExtends": { "link": "Function" },
+    "javascriptDefault": { "link": "Function" },
+    "javascriptClassName": { "link": "Identifier" },
+    "javascriptClassSuperName": { "link": "Identifier" },
+    "javascriptGlobal": { "link": "Identifier" },
+    "javascriptEndColons": { "link": "String" },
+    "javascriptFuncArg": { "link": "String" },
+    "javascriptGlobalMethod": { "link": "String" },
+    "javascriptNodeGlobal": { "link": "String" },
+    "javascriptBOMWindowProp": { "link": "String" },
+    "javascriptArrayMethod": { "link": "String" },
+    "javascriptArrayStaticMethod": { "link": "String" },
+    "javascriptCacheMethod": { "link": "String" },
+    "javascriptDateMethod": { "link": "String" },
+    "javascriptMathStaticMethod": { "link": "String" },
+    "javascriptURLUtilsProp": { "link": "String" },
+    "javascriptBOMNavigatorProp": { "link": "String" },
+    "javascriptDOMDocMethod": { "link": "String" },
+    "javascriptDOMDocProp": { "link": "String" },
+    "javascriptBOMLocationMethod": { "link": "String" },
+    "javascriptBOMWindowMethod": { "link": "String" },
+    "javascriptStringMethod": { "link": "String" },
+    "javascriptVariable": { "link": "Identifier" },
+    "javascriptIdentifier": { "link": "Identifier" },
+    "javascriptClassSuper": { "link": "Identifier" },
+    "javascriptFuncKeyword": { "link": "Function" },
+    "javascriptAsyncFunc": { "link": "Function" },
+    "javascriptClassStatic": { "link": "Identifier" },
+    "javascriptOperator": { "link": "Normal" },
+    "javascriptForOperator": { "link": "Normal" },
+    "javascriptYield": { "link": "Normal" },
+    "javascriptExceptions": { "link": "Normal" },
+    "javascriptMessage": { "link": "Normal" },
+    "javascriptTemplateSB": { "link": "Function" },
+    "javascriptTemplateSubstitution": { "link": "String" },
+    "javascriptLabel": { "link": "String" },
+    "javascriptObjectLabel": { "link": "String" },
+    "javascriptPropertyName": { "link": "String" },
+    "javascriptLogicSymbols": { "link": "String" },
+    "javascriptArrowFunc": { "link": "Identifier" },
+    "javascriptDocParamName": { "link": "Identifier" },
+    "javascriptDocTags": { "link": "Identifier" },
+    "javascriptDocNotation": { "link": "Identifier" },
+    "javascriptDocParamType": { "link": "Identifier" },
+    "javascriptDocNamedParamType": { "link": "Identifier" },
+    "javascriptBrackets": { "link": "String" },
+    "javascriptDOMElemAttrs": { "link": "String" },
+    "javascriptDOMEventMethod": { "link": "String" },
+    "javascriptDOMNodeMethod": { "link": "String" },
+    "javascriptDOMStorageMethod": { "link": "String" },
+    "javascriptHeadersMethod": { "link": "String" },
+    "javascriptAsyncFuncKeyword": { "link": "Normal" },
+    "javascriptAwaitFuncKeyword": { "link": "Normal" },
+
+    "jsClassKeyword": { "link": "Function" },
+    "jsExtendsKeyword": { "link": "Function" },
+    "jsExportDefault": { "link": "Function" },
+    "jsTemplateBraces": { "link": "Function" },
+    "jsGlobalNodeObjects": { "link": "String" },
+    "jsGlobalObjects": { "link": "String" },
+    "jsFunction": { "link": "Function" },
+    "jsFuncParens": { "link": "Function" },
+    "jsParens": { "link": "Function" },
+    "jsNull": { "link": "Type" },
+    "jsUndefined": { "link": "Type" },
+    "jsClassDefinition": { "link": "Identifier" },
+
+    "typeScriptReserved": { "link": "Function" },
+    "typeScriptLabel": { "link": "Function" },
+    "typeScriptFuncKeyword": { "link": "Function" },
+    "typeScriptIdentifier": { "link": "Identifier" },
+    "typeScriptBraces": { "link": "String" },
+    "typeScriptEndColons": { "link": "String" },
+    "typeScriptDOMObjects": { "link": "String" },
+    "typeScriptAjaxMethods": { "link": "String" },
+    "typeScriptLogicSymbols": { "link": "String" },
+    "typeScriptDocSeeTag": { "link": "Comment" },
+    "typeScriptDocParam": { "link": "Comment" },
+    "typeScriptDocTags": { "link": "vimCommentTitle" },
+    "typeScriptGlobalObjects": { "link": "String" },
+    "typeScriptParens": { "link": "Function" },
+    "typeScriptOpSymbols": { "link": "Function" },
+    "typeScriptHtmlElemProperties": { "link": "String" },
+    "typeScriptNull": { "link": "Type" },
+    "typeScriptInterpolationDelimiter": { "link": "Function" },
+
+    "purescriptModuleKeyword": { "link": "Function" },
+    "purescriptModuleName": { "link": "String" },
+    "purescriptWhere": { "link": "Function" },
+    "purescriptDelimiter": { "link": "Identifier" },
+    "purescriptType": { "link": "String" },
+    "purescriptImportKeyword": { "link": "Function" },
+    "purescriptHidingKeyword": { "link": "Function" },
+    "purescriptAsKeyword": { "link": "Function" },
+    "purescriptStructure": { "link": "Function" },
+    "purescriptOperator": { "link": "Function" },
+    "purescriptTypeVar": { "link": "String" },
+    "purescriptConstructor": { "link": "String" },
+    "purescriptFunction": { "link": "String" },
+    "purescriptConditional": { "link": "Identifier" },
+    "purescriptBacktick": { "link": "Identifier" },
+
+    "coffeeExtendedOp": { "link": "Function" },
+    "coffeeSpecialOp": { "link": "Function" },
+    "coffeeCurly": { "link": "Identifier" },
+    "coffeeParen": { "link": "Function" },
+    "coffeeBracket": { "link": "Identifier" },
+
+    "rubyStringDelimiter": { "link": "Boolean" },
+    "rubyInterpolationDelimiter": { "link": "Function" },
+
+    "objcTypeModifier": { "link": "Normal" },
+    "objcDirective": { "link": "Function" },
+
+    "goDirective": { "link": "Function" },
+    "goConstants": { "link": "Type" },
+    "goDeclaration": { "link": "Function" },
+    "goDeclType": { "link": "Function" },
+    "goBuiltins": { "link": "Identifier" },
+    "goParen": { "link": "Identifier" },
+    "goVarArgs": { "link": "Identifier" },
+    "goGenerate": { "link": "Identifier" },
+    "goReceiver": { "link": "Identifier" },
+    "goParamName": { "link": "Identifier" },
+    "goParamType": { "link": "Type" },
+    "goSingleDecl": { "link": "Identifier" },
+    "goTypeParams": { "link": "Identifier" },
+    "goReceiverVar": { "link": "Identifier" },
+    "goReceiverType": { "link": "Type" },
+    "goSimpleParams": { "link": "Identifier" },
+    "goReceiverDecl": { "link": "Identifier" },
+    "goBuildKeyword": { "link": "Keyword" },
+    "goPointerOperator": { "link": "Identifier" },
+    "goBuildDirectives": { "link": "Identifier" },
+    "goGenerateVariables": { "link": "Identifier" },
+    "goBlock": { "link": "Identifier" },
+    "goFunctionReturn": { "link": "Identifier" },
+
+    "luaIn": { "link": "Normal" },
+    "luaFunction": { "link": "Function" },
+    "luaTable": { "link": "Identifier" },
+
+    "moonSpecialOp": { "link": "Function" },
+    "moonExtendedOp": { "link": "Function" },
+    "moonFunction": { "link": "Function" },
+    "moonObject": { "link": "Identifier" },
+
+    "javaAnnotation": { "link": "Function" },
+    "javaDocTags": { "link": "Function" },
+    "javaCommentTitle": { "link": "vimCommentTitle" },
+    "javaParen": { "link": "Function" },
+    "javaParen1": { "link": "Function" },
+    "javaParen2": { "link": "Function" },
+    "javaParen3": { "link": "Function" },
+    "javaParen4": { "link": "Function" },
+    "javaParen5": { "link": "Function" },
+    "javaOperator": { "link": "Identifier" },
+    "javaVarArg": { "link": "Boolean" },
+
+    "elixirDocString": { "link": "Comment" },
+    "elixirStringDelimiter": { "link": "Boolean" },
+    "elixirInterpolationDelimiter": { "link": "Function" },
+    "elixirModuleDeclaration": { "link": "Identifier" },
+
+    "scalaNameDefinition": { "link": "String" },
+    "scalaCaseFollowing": { "link": "String" },
+    "scalaCapitalWord": { "link": "String" },
+    "scalaTypeExtension": { "link": "String" },
+    "scalaKeyword": { "link": "Normal" },
+    "scalaKeywordModifier": { "link": "Normal" },
+    "scalaSpecial": { "link": "Function" },
+    "scalaOperator": { "link": "String" },
+    "scalaTypeDeclaration": { "link": "Identifier" },
+    "scalaTypeTypePostDeclaration": { "link": "Identifier" },
+    "scalaInstanceDeclaration": { "link": "String" },
+    "scalaInterpolation": { "link": "Function" },
+
+    "markdownH1": { "link": "BooleanBold" },
+    "markdownH2": { "link": "BooleanBold" },
+    "markdownH3": { "link": "IdentifierBold" },
+    "markdownH4": { "link": "IdentifierBold" },
+    "markdownH5": { "link": "Identifier" },
+    "markdownH6": { "link": "Identifier" },
+    "markdownCode": { "link": "Function" },
+    "markdownCodeBlock": { "link": "Function" },
+    "markdownCodeDelimiter": { "link": "Function" },
+    "markdownBlockquote": { "link": "NonText" },
+    "markdownListMarker": { "link": "NonText" },
+    "markdownOrderedListMarker": { "link": "NonText" },
+    "markdownRule": { "link": "NonText" },
+    "markdownHeadingRule": { "link": "NonText" },
+    "markdownUrlDelimiter": { "link": "Function" },
+    "markdownLinkDelimiter": { "link": "Function" },
+    "markdownLinkTextDelimiter": { "link": "Function" },
+    "markdownHeadingDelimiter": { "link": "Identifier" },
+    "markdownUrl": { "link": "Type" },
+    "markdownUrlTitleDelimiter": { "link": "Boolean" },
+    "markdownIdDeclaration": { "link": "markdownLinkText" },
+    "markdownItalic": { "link": "markdownLinkText" },
+    "markdownLinkText": { "link": "markdownLinkText" },
+
+    "haskellType": { "link": "String" },
+    "haskellIdentifier": { "link": "String" },
+    "haskellSeparator": { "link": "String" },
+    "haskellDelimiter": { "link": "Identifier" },
+    "haskellOperators": { "link": "Function" },
+    "haskellBacktick": { "link": "Identifier" },
+    "haskellStatement": { "link": "Identifier" },
+    "haskellConditional": { "link": "Identifier" },
+    "haskellLet": { "link": "Function" },
+    "haskellDefault": { "link": "Function" },
+    "haskellWhere": { "link": "Function" },
+    "haskellBottom": { "link": "Function" },
+    "haskellBlockKeywords": { "link": "Function" },
+    "haskellImportKeywords": { "link": "Function" },
+    "haskellDeclKeyword": { "link": "Function" },
+    "haskellDeriving": { "link": "Function" },
+    "haskellAssocType": { "link": "Function" },
+    "haskellNumber": { "link": "Type" },
+    "haskellPragma": { "link": "Type" },
+    "haskellString": { "link": "Boolean" },
+    "haskellChar": { "link": "Boolean" },
+
+    "jsonKeyword": { "link": "Boolean" },
+    "jsonQuote": { "link": "Boolean" },
+    "jsonBraces": { "link": "String" },
+    "jsonString": { "link": "String" },
+
+###    'DiffDelete'
+###    'DiffAdd'
+###    'DiffChange'
+###    'DiffText'
+###    'DiffChange'
+###    'DiffText'
+###    'SpellCap'
+###    'SpellCap'
+###    'SpellBad'
+###    'SpellLocal'
+###    'SpellRare'
+}
+
+for key in groups->keys()
+    var tmphi: string = "hi"
+    tmphi = tmphi .. " " .. key
+    for j in groups[key]->keys()
+        tmphi = tmphi .. " "
+        tmphi = tmphi .. j
+        if j != "link"
+            tmphi = tmphi .. "="
+            tmphi = tmphi .. groups[key][j]
+        else
+            tmphi = "hi link " .. key .. " " .. groups[key][j]
+        endif
+    endfor
+    #echom tmphi 
+    exe tmphi
+endfor
+
+
+
 
 
 
