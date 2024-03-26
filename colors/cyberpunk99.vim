@@ -10,9 +10,12 @@ syntax reset
 set t_Co=256
 g:colors_name = "cyberpunk99"
 
+#syntax region MyHighlightGroup start=/\/\/.*$/ end=/$\n/me=e-2 skip=/\/\// contains=@Spell
+#syntax match Function "<|>"
+
 const palette = {
-    "bg": "#101419",
-    "black": "#101419",
+    "bg": "#1c0c0f",
+    "black": "#1c0c0f",
     "darkred": "#873233",
     "red": "#ff6e66",
     "darkgreen": "#244c52",
@@ -26,7 +29,7 @@ const palette = {
 }
 
 const groups = {
-    "Normal": { "guifg": palette.red },
+    "Normal": { "guifg": palette.red, "guibg": palette.bg },
     "IncSearch": { "guibg": palette.yellow },
     "Title": { "link": "String" },
     "NonText": { "guifg": palette.grey },
@@ -48,7 +51,7 @@ const groups = {
     "Typedef": { "link": "Type" },
     "Function": { "guifg": palette.blue },
     "Statement": { "link": "Function" },
-    "Conditional": { "link": "Function" },
+    "Conditional": { "link": "String" },
     "Repeat": { "link": "Function" },
     "Label": { "link": "Function" },
     "Identifier": { "guifg": palette.yellow },
@@ -76,7 +79,7 @@ const groups = {
 
     "Folded": { "guifg": palette.magenta},
     "FoldColumn": { "link": "Folded" },
-    "VertSplit": { "guifg": palette.bg, "guibg": palette.darkgreen },
+    "VertSplit": { "guifg": palette.bg, "guibg": palette.yellow },
     "MatchParen": { "guifg": palette.white, "guibg": palette.bg },
 
     "WildMenu": { "guibg": palette.yellow },
@@ -229,7 +232,7 @@ const groups = {
     "javaScriptMember": { "link": "Function" },
     "javaScriptNumber": { "link": "Type" },
     "javaScriptNull": { "link": "Type" },
-    "javaScriptParens": { "link": "Function" },
+    "javaScriptParens": { "link": "String" },
     "javascriptImport": { "link": "Function" },
     "javascriptExport": { "link": "Function" },
     "javascriptClassKeyword": { "link": "Function" },
@@ -286,6 +289,9 @@ const groups = {
     "javascriptHeadersMethod": { "link": "String" },
     "javascriptAsyncFuncKeyword": { "link": "Normal" },
     "javascriptAwaitFuncKeyword": { "link": "Normal" },
+    "javaScriptStringT": { "link": "String" },
+    "javaScriptEmbed": { "link": "Normal" },
+
 
     "jsClassKeyword": { "link": "Function" },
     "jsExtendsKeyword": { "link": "Function" },
@@ -352,7 +358,7 @@ const groups = {
     "goDeclaration": { "link": "Function" },
     "goDeclType": { "link": "Function" },
     "goBuiltins": { "link": "Identifier" },
-    "goParen": { "link": "Identifier" },
+    "goParen": { "link": "Boolean" },
     "goVarArgs": { "link": "Identifier" },
     "goGenerate": { "link": "Identifier" },
     "goReceiver": { "link": "Identifier" },
@@ -475,7 +481,7 @@ const groups = {
 }
 
 for key in groups->keys()
-    var tmphi: string = "hi"
+    var tmphi: string = "hi!"
     tmphi = tmphi .. " " .. key
     for j in groups[key]->keys()
         tmphi = tmphi .. " "
@@ -490,9 +496,4 @@ for key in groups->keys()
     #echom tmphi 
     exe tmphi
 endfor
-
-
-
-
-
 
