@@ -79,11 +79,12 @@ const groups = {
 
     "Folded": { "guifg": palette.magenta},
     "FoldColumn": { "link": "Folded" },
-    "VertSplit": { "guifg": palette.bg, "guibg": palette.yellow },
+    "VertSplit": { "link": "Comment" },
     "MatchParen": { "guifg": palette.white, "guibg": palette.bg },
 
     "WildMenu": { "guibg": palette.yellow },
-    "StatusLine": { "guibg": palette.black, "guifg": palette.magenta },
+    "StatusLine": { "guibg": palette.bg, "guifg": palette.cyan },
+    "StatusLineNC": { "guibg": palette.bg, "guifg": palette.cyan },
 
     "SignColumn": { "guibg": palette.bg },
 
@@ -467,6 +468,13 @@ const groups = {
     "jsonBraces": { "link": "String" },
     "jsonString": { "link": "String" },
 
+
+    "ScopeMenuMatch": { "link": "Special" },
+    "ScopeMenuVirtualText": { "link": "Comment" },
+    "ScopeMenuSubtle": { "link": "String" },
+    "ScopeMenuCurrent": { "link": "Special" },
+
+
 ###    'DiffDelete'
 ###    'DiffAdd'
 ###    'DiffChange'
@@ -482,6 +490,7 @@ const groups = {
 
 for key in groups->keys()
     var tmphi: string = "hi!"
+    exe "hi clear " .. key
     tmphi = tmphi .. " " .. key
     for j in groups[key]->keys()
         tmphi = tmphi .. " "
