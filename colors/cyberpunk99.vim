@@ -82,7 +82,7 @@ const groups = {
     "VertSplit": { "link": "Comment" },
     "MatchParen": { "guifg": palette.white, "guibg": palette.bg },
 
-    "WildMenu": { "guibg": palette.yellow },
+    "WildMenu": { "guifg": palette.magenta },
     "StatusLine": { "guibg": palette.bg, "guifg": palette.cyan },
     "StatusLineNC": { "guibg": palette.bg, "guifg": palette.cyan },
 
@@ -107,10 +107,10 @@ const groups = {
     "diffNewFile": { "link": "Identifier" },
     "diffLine": { "link": "Function" },
 
-    "htmlTag": { "link": "Function" },
-    "htmlEndTag": { "link": "Function" },
-    "htmlTagName": { "link": "Function" },
-    "htmlArg": { "link": "Function" },
+    "htmlTag": { "link": "String" },
+    "htmlEndTag": { "link": "String" },
+    "htmlTagName": { "link": "Normal" },
+    "htmlArg": { "link": "Normal" },
     "htmlScriptTag": { "link": "Type" },
     "htmlTagN": { "link": "String" },
     "htmlSpecialTagName": { "link": "Function" },
@@ -158,6 +158,7 @@ const groups = {
     "vimVar": { "link": "Normal" },
     "vimOption": { "link": "Constant" },
     "vimCommand": { "link": "String" },
+    "helpExample": { "link": "String" },
 
     "clojureKeyword": { "link": "Function" },
     "clojureCond": { "link": "Identifier" },
